@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineRate — Оценка фильмов и сериалов</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%236366f1'/%3E%3Cstop offset='100%25' style='stop-color:%23ec4899'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='20' fill='url(%23g)'/%3E%3Cpath d='M30 35 L30 65 L45 65 L45 75 L70 60 L70 40 L45 25 L45 35 Z' fill='white'/%3E%3Ccircle cx='70' cy='50' r='8' fill='white'/%3E%3C/svg%3E">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="frontend/css/styles.css">
+</head>
+<body>
+    <!-- Toast Container -->
+    <div id="toast-container"></div>
+
+    <!-- Auth Page -->
+    <div id="auth-page" class="auth-page">
+        <div class="auth-container">
+            <div class="auth-card">
+                <div class="auth-logo">
+                    <div class="logo-icon">
+                        <i class="fas fa-film"></i>
+                    </div>
+                    <h1>CineRate</h1>
+                    <p>Ваш личный кинодневник</p>
+                </div>
+
+                <form id="login-form" style="display: none;">
+                    <h2 id="login-title" style="text-align: center; margin-bottom: 24px; color: var(--text-primary);">Вход</h2>
+                    <div class="form-group">
+                        <label>Имя пользователя</label>
+                        <input type="text" id="login-username" placeholder="Введите имя" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Пароль</label>
+                        <input type="password" id="login-password" placeholder="Введите пароль" required>
+                    </div>
+                    <div class="error-message" id="login-error"></div>
+                    <button type="submit" class="btn btn-primary btn-block">
+                        <i class="fas fa-sign-in-alt"></i> Войти
+                    </button>
+                    <div class="auth-footer">
+                        Нет аккаунта? <a id="show-register">Создать</a>
+                    </div>
+                </form>
+
+                <form id="register-form" style="display: none;">
+                    <h2 id="register-title" style="text-align: center; margin-bottom: 24px; color: var(--text-primary);">Регистрация</h2>
+                    <div class="form-group">
+                        <label>Имя пользователя</label>
+                        <input type="text" id="reg-username" placeholder="Придумайте имя" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Отображаемое имя</label>
+                        <input type="text" id="reg-display-name" placeholder="Как к вам обращаться?">
+                    </div>
+                    <div class="form-group">
+                        <label>Пароль</label>
+                        <input type="password" id="reg-password" placeholder="Минимум 6 символов" required minlength="6">
+                    </div>
+                    <div class="error-message" id="register-error"></div>
+                    <button type="submit" class="btn btn-primary btn-block">
+                        <i class="fas fa-user-plus"></i> Создать аккаунт
+                    </button>
+                    <div class="auth-footer">
+                        Уже есть аккаунт? <a id="show-login">Войти</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div id="app-container" class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <a href="#" class="logo" id="logo-btn">
+                    <div class="logo-icon">
+                        <i class="fas fa-film"></i>
+                    </div>
+                    <span>CineRate</span>
+                </a>
+
+                <nav class="nav">
+                    <button class="nav-btn active" data-page="home">
+                        <i class="fas fa-home"></i>
+                        <span>Главная</span>
+                    </button>
+                    <button class="nav-btn" data-page="search">
+                        <i class="fas fa-search"></i>
+                        <span>Поиск</span>
+                    </button>
+                    <button class="nav-btn" data-page="watchlist">
+                        <i class="fas fa-bookmark"></i>
+                        <span>Смотреть позже</span>
+                    </button>
+                    <button class="nav-btn" data-page="ratings">
+                        <i class="fas fa-star"></i>
+                        <span>Мои оценки</span>
+                    </button>
+                    <button class="nav-btn" data-page="stats">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Статистика</span>
+                    </button>
+                </nav>
+
+                <div class="user-menu">
+                    <button class="btn-icon" id="profile-btn" title="Профиль">
+                        <i class="fas fa-user"></i>
+                    </button>
+                    <button class="btn-icon" id="logout-btn" title="Выйти">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main">
+            <!-- Home Page -->
+            <section id="home-page" class="page active">
+                <div class="hero">
+                    <h1>Открой для себя новые фильмы</h1>
+                    <p>Оценивай, сохраняй и делись своими впечатлениями</p>
+                </div>
+
+                <div class="section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-fire"></i> Популярное сейчас</h2>
+                    </div>
+                    <div id="popular-movies" class="movies-grid">
+                        <div class="loading">
+                            <div class="spinner"></div>
+                            <p>Загрузка...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-header">
+                        <h2><i class="fas fa-trophy"></i> Высоко оцененные</h2>
+                    </div>
+                    <div id="top-rated-movies" class="movies-grid">
+                        <div class="loading">
+                            <div class="spinner"></div>
+                            <p>Загрузка...</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Search Page -->
+            <section id="search-page" class="page">
+                <div class="search-hero">
+                    <h1>Поиск фильмов и сериалов</h1>
+                    <div class="search-box">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" id="search-input" placeholder="Введите название фильма или сериала..." autocomplete="off">
+                        <button id="search-btn" class="btn btn-primary">Найти</button>
+                    </div>
+                </div>
+
+                <div id="search-results" class="search-results">
+                    <div class="empty-state">
+                        <i class="fas fa-search"></i>
+                        <h3>Начните поиск</h3>
+                        <p>Введите название фильма или сериала</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Ratings Page -->
+            <section id="ratings-page" class="page">
+                <div class="page-header">
+                    <h1>Мои оценки</h1>
+                    <p>Все фильмы и сериалы, которые вы оценили</p>
+                </div>
+
+                <div class="filter-bar">
+                    <button class="filter-btn active" data-filter="all">Все</button>
+                    <button class="filter-btn" data-filter="movies">🎬 Фильмы</button>
+                    <button class="filter-btn" data-filter="tv">📺 Сериалы</button>
+                    <button class="filter-btn" data-filter="10">10 ★</button>
+                    <button class="filter-btn" data-filter="high">8-9 ★</button>
+                    <button class="filter-btn" data-filter="low">1-7 ★</button>
+                </div>
+
+                <div id="ratings-list" class="movies-grid">
+                    <div class="empty-state">
+                        <i class="fas fa-star"></i>
+                        <h3>Пока нет оценок</h3>
+                        <p>Найдите фильм и поставьте ему оценку</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Watchlist Page -->
+            <section id="watchlist-page" class="page">
+                <div class="page-header">
+                    <h1><i class="fas fa-bookmark"></i> Смотреть позже</h1>
+                    <p>Фильмы и сериалы, которые вы хотите посмотреть</p>
+                </div>
+
+                <div id="watchlist-grid" class="movies-grid">
+                    <div class="empty-state">
+                        <i class="fas fa-bookmark"></i>
+                        <h3>Список пуст</h3>
+                        <p>Добавляйте фильмы, которые хотите посмотреть позже</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Stats Page -->
+            <section id="stats-page" class="page">
+                <div class="page-header">
+                    <h1>Статистика</h1>
+                    <p>Анализ ваших кинопредпочтений</p>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon blue">
+                            <i class="fas fa-film"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="stat-total">0</span>
+                            <span class="stat-label">Всего оценок</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon gold">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="stat-avg">0.0</span>
+                            <span class="stat-label">Средняя оценка</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon green">
+                            <i class="fas fa-arrow-up"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="stat-max">0</span>
+                            <span class="stat-label">Лучшая оценка</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon red">
+                            <i class="fas fa-arrow-down"></i>
+                        </div>
+                        <div class="stat-info">
+                            <span class="stat-value" id="stat-min">0</span>
+                            <span class="stat-label">Худшая оценка</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <h2><i class="fas fa-chart-bar"></i> Распределение оценок</h2>
+                    <div id="rating-chart" class="rating-chart">
+                        <!-- Chart bars will be inserted here -->
+                    </div>
+                </div>
+
+                <div class="top-movies-section">
+                    <h2><i class="fas fa-trophy"></i> Лучшие фильмы</h2>
+                    <div id="top-movies-list" class="top-movies-list">
+                        <!-- Top movies will be inserted here -->
+                    </div>
+                </div>
+
+                <div id="stats-extra"></div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Movie Detail Modal -->
+    <div class="modal-overlay" id="movie-modal">
+        <div class="modal">
+            <button class="modal-close" id="modal-close">
+                <i class="fas fa-times"></i>
+            </button>
+            
+            <div class="modal-content">
+                <div class="modal-poster" id="modal-poster">
+                    <!-- Poster will be inserted here -->
+                </div>
+                
+                <div class="modal-info">
+                    <div class="modal-header">
+                        <span class="media-badge" id="modal-media-type">Фильм</span>
+                        <h2 id="modal-title">Название фильма</h2>
+                        <div class="modal-meta">
+                            <span id="modal-year">2024</span>
+                            <span class="separator">•</span>
+                            <span id="modal-genres">Драма, Триллер</span>
+                            <span class="separator sep-rating">•</span>
+                            <span class="rating" id="modal-rating">
+                                <i class="fas fa-star"></i>
+                                <span id="modal-tmdb-rating">8.5</span>
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="overview-wrap">
+                        <p class="modal-overview" id="modal-overview">
+                            Описание фильма...
+                        </p>
+                        <button class="overview-more-btn" id="overview-more" style="display: none;">
+                            <span>Ещё</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                    </div>
+
+                    <div class="rating-section">
+                        <div class="rating-circle-wrap">
+                            <div class="rating-ring" id="rating-ring">
+                                <svg viewBox="0 0 120 120">
+                                    <defs>
+                                        <linearGradient id="ringGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                            <stop offset="0%" style="stop-color:#ef4444"/>
+                                            <stop offset="50%" style="stop-color:#f59e0b"/>
+                                            <stop offset="100%" style="stop-color:#22c55e"/>
+                                        </linearGradient>
+                                    </defs>
+                                    <circle class="ring-bg" cx="60" cy="60" r="54"/>
+                                    <circle class="ring-progress" id="ring-progress" cx="60" cy="60" r="54"/>
+                                </svg>
+                                <div class="ring-value">
+                                    <span class="ring-num" id="rating-value">1</span>
+                                </div>
+                            </div>
+                            <div class="rating-word" id="rating-text">Оцените фильм</div>
+                        </div>
+                        
+                        <div class="slider-wrap">
+                            <div class="slider-bar" id="slider-bar">
+                                <div class="slider-fill" id="slider-fill"></div>
+                                <div class="slider-knob" id="slider-knob"></div>
+                            </div>
+                            <div class="slider-labels">
+                                <span>1</span>
+                                <span>10</span>
+                            </div>
+                        </div>
+                        
+                        <div class="rating-comment">
+                            <input type="text" id="rating-comment-input" placeholder="Заметка (например: досмотрел 4 сезон)..." maxlength="100">
+                        </div>
+                        
+                        <div class="modal-actions">
+                            <button class="btn btn-secondary" id="modal-cancel">Отмена</button>
+                            <button class="btn btn-secondary" id="modal-watchlist" title="Смотреть позже">
+                                <i class="fas fa-bookmark"></i>
+                            </button>
+                            <button class="btn btn-primary" id="modal-save">
+                                <i class="fas fa-check"></i> Сохранить
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Profile Modal -->
+    <div class="modal-overlay" id="profile-modal">
+        <div class="modal" style="max-width: 400px;">
+            <button class="modal-close" id="profile-modal-close">
+                <i class="fas fa-times"></i>
+            </button>
+            <div style="padding: 32px; text-align: center;">
+                <div style="width: 80px; height: 80px; background: var(--gradient-primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; font-size: 32px;" id="profile-modal-avatar">?</div>
+                <h2 style="margin-bottom: 24px;">Профиль</h2>
+                <div class="form-group" style="text-align: left;">
+                    <label>Отображаемое имя</label>
+                    <input type="text" id="profile-display-name" placeholder="Введите имя" style="width: 100%;">
+                </div>
+                <div style="display: flex; gap: 12px; margin-top: 24px;">
+                    <button class="btn btn-secondary" id="profile-modal-cancel" style="flex: 1;">Отмена</button>
+                    <button class="btn btn-primary" id="save-profile-btn" style="flex: 1;">
+                        <i class="fas fa-save"></i> Сохранить
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirm Dialog -->
+    <div class="confirm-overlay" id="confirm-overlay">
+        <div class="confirm-dialog">
+            <div class="confirm-icon">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+            <h3 class="confirm-title">Подтвердите действие</h3>
+            <p class="confirm-message" id="confirm-message">Вы уверены?</p>
+            <div class="confirm-actions">
+                <button class="btn btn-secondary" id="confirm-cancel">Отмена</button>
+                <button class="btn btn-danger" id="confirm-ok">
+                    <i class="fas fa-check"></i> Подтвердить
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="frontend/js/api.js?v=2"></script>
+    <script src="frontend/js/auth.js"></script>
+    <script src="frontend/js/app.js"></script>
+</body>
+</html>
