@@ -1,8 +1,11 @@
 // API Client
-// Backend on Fly.io (no /api prefix)
+// Backend on Fly.io
 const API_URL = window.location.hostname === 'localhost' 
     ? 'http://localhost:8000'
     : 'https://cinerate.fly.dev';
+
+// Remove /api prefix from all calls (backend doesn't have it)
+const stripApiPrefix = (url) => url.startsWith('/api/') ? url.slice(4) : url;
 
 class API {
     constructor() {
@@ -20,7 +23,8 @@ class API {
         }
 
         try {
-            const response = await fetch(`${API_URL}${url}`, {
+            const cleanUrl = stripApiPrefix(url);
+            const response = await fetch(`${API_URL}${cleanUrl}`, {
                 ...options,
                 headers
             });
