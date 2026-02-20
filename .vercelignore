@@ -1,3 +1,6 @@
 *.py
 api/
+api.bak/
 requirements.txt
+requirements.txt.bak
+*.bak
