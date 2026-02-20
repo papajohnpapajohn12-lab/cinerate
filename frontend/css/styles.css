@@ -80,6 +80,15 @@ html {
     background: rgba(255, 255, 255, 0.25);
 }
 
+html, body {
+    width: 100%;
+    max-width: 100vw;
+    overflow-x: hidden;
+    touch-action: pan-y;
+    -webkit-text-size-adjust: 100%;
+    -webkit-overflow-scrolling: touch;
+}
+
 body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     background: var(--bg-primary);
@@ -87,6 +96,20 @@ body {
     line-height: 1.5;
     min-height: 100vh;
     -webkit-font-smoothing: antialiased;
+    position: relative;
+}
+
+/* Prevent zoom on input focus (iOS) */
+input, textarea, select {
+    font-size: 16px;
+    max-width: 100%;
+}
+
+/* Container fix */
+.container {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
 }
 
 /* ===== AUTH PAGE ===== */
@@ -2089,37 +2112,23 @@ body {
         font-size: 0.75rem;
     }
     
-    /* Bottom Nav for Mobile */
-    .nav-links {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        background: var(--bg-secondary);
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
-        padding: var(--space-xs) 0;
-        justify-content: space-around;
+    /* Mobile Nav - Static */
+    .nav {
+        position: sticky;
+        top: 0;
         z-index: 100;
     }
     
+    .nav-links {
+        gap: var(--space-xs);
+    }
+    
     .nav-links a {
-        flex-direction: column;
-        padding: var(--space-xs);
-        gap: 2px;
+        padding: var(--space-xs) var(--space-sm);
     }
     
     .nav-links a i {
-        font-size: 1.25rem;
-    }
-    
-    /* Add padding to main content for bottom nav */
-    .main-content {
-        padding-bottom: 70px;
-    }
-    
-    /* Container padding adjustment */
-    .container {
-        padding-bottom: var(--space-xl);
+        font-size: 1.125rem;
     }
 }
 
@@ -2188,5 +2197,123 @@ body {
             padding-left: max(var(--space-sm), env(safe-area-inset-left));
             padding-right: max(var(--space-sm), env(safe-area-inset-right));
         }
+    }
+}
+
+
+/* ============================================================
+   STRICT MOBILE FIX - NO ZOOM, NO SCROLL, NO SHIFT
+   ============================================================ */
+
+/* Force all elements to stay within viewport */
+* {
+    max-width: 100vw;
+}
+
+/* Images never exceed container */
+img, video, iframe {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+/* Prevent any horizontal overflow */
+html, body, .container, .main-content, .page, .section {
+    overflow-x: hidden !important;
+}
+
+/* Touch action - only vertical scroll */
+html, body {
+    touch-action: pan-y pinch-zoom;
+    overscroll-behavior-x: none;
+}
+
+/* iOS specific fixes */
+@supports (-webkit-touch-callout: none) {
+    html, body {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+    }
+    
+    .main-content {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        overflow-y: auto;
+        overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
+    }
+}
+
+/* Ensure movie cards don't overflow */
+.movie-card {
+    max-width: 100%;
+}
+
+.movie-poster {
+    max-width: 100%;
+    overflow: hidden;
+}
+
+.movie-poster img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
+/* Stats containers */
+.stats-grid, .stats-summary {
+    width: 100%;
+    max-width: 100%;
+}
+
+/* Modal fixes for mobile */
+@media (max-width: 480px) {
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100vw;
+        height: 100vh;
+        overflow: hidden;
+    }
+    
+    .modal-content {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        max-width: 100vw;
+        max-height: 100vh;
+        border-radius: 0;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+    
+    /* Force text wrap */
+    .movie-info h3, .modal-title, .stat-label {
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        hyphens: auto;
+    }
+    
+    /* Prevent button overflow */
+    .movie-actions {
+        flex-wrap: wrap;
+    }
+    
+    .movie-actions .btn {
+        flex: 1;
+        min-width: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 }
