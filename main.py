@@ -679,9 +679,15 @@ async def check_watchlist(tmdb_id: int, user: dict = Depends(get_user)):
 # SPA catch-all - serve index.html for all non-API routes
 @app.get("/{path:path}")
 async def serve_spa(path: str):
-    # API routes are handled above, this is for everything else
-    if path.startswith("api/") or path.startswith("frontend/"):
-        return JSONResponse({"detail": "Not found"}, status_code=404)
+    # Skip API paths (let FastAPI handle them)
+    if path.startswith("api/"):
+        raise HTTPException(status_code=404, detail="Not found")
+    # Serve static files from frontend directory
+    if path and (path.startswith("frontend/") or path.endswith(".css") or path.endswith(".js") or path.endswith(".png") or path.endswith(".jpg") or path.endswith(".svg")):
+        file_path = path if path.startswith("frontend/") else f"frontend/{path}"
+        if os.path.exists(file_path) and os.path.isfile(file_path):
+            return FileResponse(file_path)
+    # Return SPA for all other routes
     return FileResponse("index.html")
 
 if __name__ == "__main__":
