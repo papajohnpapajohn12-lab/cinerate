@@ -13,7 +13,8 @@ from typing import Optional, List
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, HTTPException, Depends, Request
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, FileResponse
+from fastapi.staticfiles import StaticFiles
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from pydantic import BaseModel, Field
 from pydantic_settings import BaseSettings
@@ -284,6 +285,10 @@ async def lifespan(app: FastAPI):
     await db.close()
 
 app = FastAPI(title="FilmRate", lifespan=lifespan)
+
+# Mount static files
+if os.path.exists("frontend"):
+    app.mount("/frontend", StaticFiles(directory="frontend"), name="frontend")
 
 # Global exception handler
 @app.exception_handler(Exception)
@@ -670,6 +675,14 @@ async def check_watchlist(tmdb_id: int, user: dict = Depends(get_user)):
         [user["id"], tmdb_id]
     )
     return {"in_watchlist": len(rows) > 0}
+
+# SPA catch-all - serve index.html for all non-API routes
+@app.get("/{path:path}")
+async def serve_spa(path: str):
+    # API routes are handled above, this is for everything else
+    if path.startswith("api/") or path.startswith("frontend/"):
+        return JSONResponse({"detail": "Not found"}, status_code=404)
+    return FileResponse("index.html")
 
 if __name__ == "__main__":
     import uvicorn

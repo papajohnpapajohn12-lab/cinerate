@@ -7,7 +7,10 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy application
-COPY . .
+COPY main.py .
+COPY api/ ./api/
+COPY frontend/ ./frontend/
+COPY index.html .
 
 # Expose port
 EXPOSE 8080

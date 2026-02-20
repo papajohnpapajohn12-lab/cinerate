@@ -1,8 +1,6 @@
 // API Client
-// API deployed on Fly.io
-const API_URL = window.location.hostname === 'localhost' 
-    ? 'http://localhost:8000'
-    : 'https://cinerate.fly.dev/api';
+// Same domain for Fly.io deployment
+const API_URL = '/api';
 
 class API {
     constructor() {
