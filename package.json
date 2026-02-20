@@ -1,8 +1,7 @@
 {
   "name": "cinerate-frontend",
   "version": "1.0.0",
-  "description": "CineRate movie rating app frontend",
   "scripts": {
-    "build": "echo 'No build needed for static site'"
+    "build": "echo 'Static site - no build needed'"
   }
 }
