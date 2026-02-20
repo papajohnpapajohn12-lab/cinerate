@@ -2,15 +2,17 @@
 FilmRate Backend - Working Version
 """
 import os
+import sys
 import httpx
 import hashlib
 import secrets
 import json
+import traceback
 from datetime import datetime, timedelta
 from typing import Optional, List
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, HTTPException, Depends
+from fastapi import FastAPI, HTTPException, Depends, Request
 from fastapi.responses import JSONResponse
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from pydantic import BaseModel, Field
@@ -18,16 +20,21 @@ from pydantic_settings import BaseSettings
 
 # ===== CONFIG =====
 class Settings(BaseSettings):
-    TURSO_DATABASE_URL: str
-    TURSO_AUTH_TOKEN: str
-    SECRET_KEY: str
-    TMDB_API_KEY: str
+    TURSO_DATABASE_URL: str = os.environ.get("TURSO_DATABASE_URL", "")
+    TURSO_AUTH_TOKEN: str = os.environ.get("TURSO_AUTH_TOKEN", "")
+    SECRET_KEY: str = os.environ.get("SECRET_KEY", "fallback-secret-key-change-in-production")
+    TMDB_API_KEY: str = os.environ.get("TMDB_API_KEY", "")
     TMDB_BASE_URL: str = "https://api.themoviedb.org/3"
     
     class Config:
         env_file = ".env"
 
-settings = Settings()
+try:
+    settings = Settings()
+    print(f"[INIT] Settings loaded. DB URL: {settings.TURSO_DATABASE_URL[:20]}..." if settings.TURSO_DATABASE_URL else "[INIT] WARNING: TURSO_DATABASE_URL is empty!")
+except Exception as e:
+    print(f"[INIT ERROR] Failed to load settings: {e}")
+    settings = None
 
 # ===== DATABASE =====
 import httpx as hx
@@ -277,6 +284,17 @@ async def lifespan(app: FastAPI):
     await db.close()
 
 app = FastAPI(title="FilmRate", lifespan=lifespan)
+
+# Global exception handler
+@app.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc: Exception):
+    error_msg = f"{type(exc).__name__}: {str(exc)}"
+    traceback_str = traceback.format_exc()
+    print(f"[ERROR] {error_msg}\n{traceback_str}")
+    return JSONResponse(
+        status_code=500,
+        content={"detail": error_msg, "traceback": traceback_str.split("\n")[-5:]}
+    )
 
 @app.middleware("http")
 async def cors(req, call_next):
