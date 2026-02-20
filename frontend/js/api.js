@@ -1,6 +1,8 @@
 // API Client
-// Same domain for Fly.io deployment
-const API_URL = '/api';
+// Backend on Fly.io, Frontend on Netlify
+const API_URL = window.location.hostname === 'localhost' 
+    ? 'http://localhost:8000'
+    : 'https://cinerate.fly.dev/api';
 
 class API {
     constructor() {
