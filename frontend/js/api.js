@@ -1,8 +1,8 @@
 // API Client
-// Use relative URL for Vercel (same domain), localhost for development
+// API deployed on Fly.io
 const API_URL = window.location.hostname === 'localhost' 
     ? 'http://localhost:8000'
-    : '/api';
+    : 'https://cinerate.fly.dev/api';
 
 class API {
     constructor() {
