@@ -8,3 +8,4 @@ httpx==0.26.0
 python-dotenv==1.0.0
 cryptography==42.0.0
 mangum==0.17.0
+starlette==0.36.0
