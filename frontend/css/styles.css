@@ -1823,3 +1823,370 @@ body {
         font-size: 0.8125rem;
     }
 }
+
+
+/* ============================================================
+   MOBILE RESPONSIVE STYLES
+   ============================================================ */
+
+/* ===== TABLET (max-width: 1024px) ===== */
+@media (max-width: 1024px) {
+    .container {
+        padding: 0 var(--space-md);
+    }
+    
+    .movies-grid {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: var(--space-lg);
+    }
+}
+
+/* ===== MOBILE (max-width: 768px) ===== */
+@media (max-width: 768px) {
+    /* Container */
+    .container {
+        padding: 0 var(--space-sm);
+    }
+    
+    /* Navigation */
+    .nav {
+        padding: var(--space-sm) 0;
+    }
+    
+    .nav-content {
+        flex-wrap: wrap;
+        gap: var(--space-sm);
+    }
+    
+    .nav-brand span {
+        display: none;
+    }
+    
+    .nav-links {
+        gap: var(--space-xs);
+    }
+    
+    .nav-links a {
+        padding: var(--space-xs) var(--space-sm);
+        font-size: 0.75rem;
+    }
+    
+    .nav-links a span {
+        display: none;
+    }
+    
+    .nav-links a i {
+        font-size: 1.125rem;
+        margin: 0;
+    }
+    
+    /* Hero Section */
+    .hero {
+        padding: var(--space-xl) 0;
+    }
+    
+    .hero h1 {
+        font-size: 1.75rem;
+    }
+    
+    .hero p {
+        font-size: 1rem;
+    }
+    
+    .search-hero h1 {
+        font-size: 1.5rem;
+    }
+    
+    /* Search Box */
+    .search-box {
+        flex-direction: column;
+        gap: var(--space-sm);
+    }
+    
+    .search-box input {
+        padding: 0.875rem 0.875rem 0.875rem 2.5rem;
+    }
+    
+    .search-icon {
+        left: 0.75rem;
+    }
+    
+    /* Movies Grid - 2 columns on mobile */
+    .movies-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--space-md);
+    }
+    
+    .movie-card:hover {
+        transform: none;
+    }
+    
+    .movie-info {
+        padding: var(--space-sm);
+    }
+    
+    .movie-info h3 {
+        font-size: 0.875rem;
+        line-height: 1.3;
+    }
+    
+    .movie-meta {
+        font-size: 0.75rem;
+    }
+    
+    /* Page Header */
+    .page-header h1 {
+        font-size: 1.5rem;
+    }
+    
+    /* Section Header */
+    .section-header h2 {
+        font-size: 1.125rem;
+    }
+    
+    /* Filters */
+    .filters {
+        flex-wrap: wrap;
+        gap: var(--space-xs);
+    }
+    
+    .filter-btn {
+        padding: var(--space-xs) var(--space-sm);
+        font-size: 0.75rem;
+    }
+    
+    /* Stats */
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .stat-bar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-xs);
+    }
+    
+    .stat-bar-fill {
+        width: 100%;
+    }
+    
+    /* Empty State */
+    .empty-state {
+        padding: var(--space-xl) var(--space-md);
+    }
+    
+    .empty-state i {
+        font-size: 3rem;
+    }
+    
+    .empty-state h3 {
+        font-size: 1.125rem;
+    }
+}
+
+/* ===== SMALL MOBILE (max-width: 480px) ===== */
+@media (max-width: 480px) {
+    /* Movies Grid - 2 columns smaller */
+    .movies-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--space-sm);
+    }
+    
+    /* Modal */
+    .modal-content {
+        width: 100%;
+        max-width: 100%;
+        margin: 0;
+        border-radius: 0;
+        min-height: 100vh;
+    }
+    
+    .modal-body {
+        padding: var(--space-md);
+    }
+    
+    .modal-poster {
+        height: 250px;
+    }
+    
+    .modal-title {
+        font-size: 1.25rem;
+    }
+    
+    .modal-meta {
+        flex-wrap: wrap;
+        gap: var(--space-xs);
+    }
+    
+    /* Rating Modal */
+    .rating-modal-content {
+        padding: var(--space-lg);
+    }
+    
+    .rating-display {
+        width: 120px;
+        height: 120px;
+    }
+    
+    .rating-value {
+        font-size: 2.5rem;
+    }
+    
+    .rating-slider {
+        width: 100%;
+        max-width: 280px;
+    }
+    
+    .rating-label {
+        font-size: 1rem;
+    }
+    
+    /* Action Buttons */
+    .action-buttons {
+        flex-direction: column;
+        gap: var(--space-sm);
+    }
+    
+    .btn {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    /* Toast */
+    .toast {
+        left: var(--space-sm);
+        right: var(--space-sm);
+        max-width: none;
+    }
+    
+    /* Movie Card Actions */
+    .movie-actions {
+        padding: var(--space-xs);
+        gap: var(--space-xs);
+    }
+    
+    .movie-actions .btn {
+        padding: var(--space-xs) var(--space-sm);
+        font-size: 0.75rem;
+    }
+    
+    .btn-icon {
+        width: 32px;
+        height: 32px;
+    }
+    
+    /* Stats Summary */
+    .stats-summary {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--space-sm);
+    }
+    
+    .stat-number {
+        font-size: 1.5rem;
+    }
+    
+    .stat-label {
+        font-size: 0.75rem;
+    }
+    
+    /* Bottom Nav for Mobile */
+    .nav-links {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: var(--bg-secondary);
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        padding: var(--space-xs) 0;
+        justify-content: space-around;
+        z-index: 100;
+    }
+    
+    .nav-links a {
+        flex-direction: column;
+        padding: var(--space-xs);
+        gap: 2px;
+    }
+    
+    .nav-links a i {
+        font-size: 1.25rem;
+    }
+    
+    /* Add padding to main content for bottom nav */
+    .main-content {
+        padding-bottom: 70px;
+    }
+    
+    /* Container padding adjustment */
+    .container {
+        padding-bottom: var(--space-xl);
+    }
+}
+
+/* ===== LANDSCAPE MOBILE ===== */
+@media (max-height: 500px) and (orientation: landscape) {
+    .modal-content {
+        max-height: 100vh;
+        overflow-y: auto;
+    }
+    
+    .modal-poster {
+        height: 150px;
+    }
+    
+    .rating-display {
+        width: 100px;
+        height: 100px;
+    }
+    
+    .rating-value {
+        font-size: 2rem;
+    }
+}
+
+/* ===== TOUCH DEVICE OPTIMIZATIONS ===== */
+@media (hover: none) and (pointer: coarse) {
+    .movie-card:hover {
+        transform: none;
+    }
+    
+    .movie-card:hover .movie-poster img {
+        transform: none;
+    }
+    
+    .movie-card:active {
+        transform: scale(0.98);
+    }
+    
+    .btn:hover {
+        transform: none;
+    }
+    
+    .btn:active {
+        transform: scale(0.95);
+    }
+    
+    /* Larger touch targets */
+    .nav-links a {
+        min-height: 44px;
+        min-width: 44px;
+    }
+    
+    .filter-btn {
+        min-height: 36px;
+    }
+}
+
+/* ===== SAFE AREA FOR NOTCH PHONES ===== */
+@supports (padding: max(0px)) {
+    @media (max-width: 480px) {
+        .nav-links {
+            padding-bottom: max(var(--space-xs), env(safe-area-inset-bottom));
+        }
+        
+        .container {
+            padding-left: max(var(--space-sm), env(safe-area-inset-left));
+            padding-right: max(var(--space-sm), env(safe-area-inset-right));
+        }
+    }
+}
