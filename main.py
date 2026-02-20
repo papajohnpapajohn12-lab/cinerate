@@ -12,7 +12,7 @@ from datetime import datetime, timedelta
 from typing import Optional, List
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, HTTPException, Depends, Request
+from fastapi import FastAPI, APIRouter, HTTPException, Depends, Request
 from fastapi.responses import JSONResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
@@ -285,6 +285,9 @@ async def lifespan(app: FastAPI):
     await db.close()
 
 app = FastAPI(title="FilmRate", lifespan=lifespan)
+
+# Create API router with prefix
+api_router = APIRouter(prefix="/api")
 
 # Mount static files
 if os.path.exists("frontend"):
